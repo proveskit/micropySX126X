@@ -6,6 +6,10 @@ from sx126x import SX126X
 
 _SX126X_PA_CONFIG_SX1262 = const(0x00)
 
+class RadioModulation:
+    FSK = "FSK"  # Frequency-shift Keying
+    LORA = "LoRa"  # Long Range
+
 class SX1262(SX126X):
     TX_DONE = SX126X_IRQ_TX_DONE
     RX_DONE = SX126X_IRQ_RX_DONE
@@ -23,6 +27,7 @@ class SX1262(SX126X):
                  irq: digitalio.DigitalInOut, rst: digitalio.DigitalInOut , gpio: digitalio.DigitalInOut):
         super().__init__(spi, cs, irq, rst, gpio)
         self._callbackFunction = self._dummyFunction
+        self.radio_modulation = RadioModulation.LORA
 
     def begin(self, freq=434.0, bw=125.0, sf=9, cr=7, syncWord=SX126X_SYNC_WORD_PRIVATE,
               power=14, currentLimit=60.0, preambleLength=8, implicit=False, implicitLen=0xFF,
@@ -60,6 +65,8 @@ class SX1262(SX126X):
                  fixedPacketLength=False, packetLength=0xFF, preambleDetectorLength=SX126X_GFSK_PREAMBLE_DETECT_16,
                  tcxoVoltage=1.6, useRegulatorLDO=False,
                  blocking=True):
+        self.radio_modulation = RadioModulation.FSK
+        
         state = super().beginFSK(br, freqDev, rxBw, currentLimit, preambleLength, dataShaping, preambleDetectorLength, tcxoVoltage, useRegulatorLDO)
         ASSERT(state)
 
