@@ -2,8 +2,9 @@ from time import monotonic_ns, sleep
 
 import busio
 import digitalio
-from _sx126x import *
 from micropython import const
+
+from proves_sx126._sx126x import *
 
 _MS_PER_NS = const(1000000)
 _US_PER_NS = const(1000)

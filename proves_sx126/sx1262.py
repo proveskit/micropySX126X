@@ -1,8 +1,9 @@
 import busio
 import digitalio
-from _sx126x import *
 from micropython import const
-from sx126x import SX126X
+
+from proves_sx126._sx126x import *
+from proves_sx126.sx126x import SX126X
 
 _SX126X_PA_CONFIG_SX1262 = const(0x00)
 
@@ -66,7 +67,7 @@ class SX1262(SX126X):
                  tcxoVoltage=1.6, useRegulatorLDO=False,
                  blocking=True):
         self.radio_modulation = RadioModulation.FSK
-        
+
         state = super().beginFSK(br, freqDev, rxBw, currentLimit, preambleLength, dataShaping, preambleDetectorLength, tcxoVoltage, useRegulatorLDO)
         ASSERT(state)
 
