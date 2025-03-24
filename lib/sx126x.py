@@ -2,9 +2,8 @@ from time import monotonic_ns, sleep
 
 import busio
 import digitalio
+from _sx126x import *
 from micropython import const
-
-from lib.sx126._sx126x import *
 
 _MS_PER_NS = const(1000000)
 _US_PER_NS = const(1000)
@@ -29,22 +28,15 @@ def ticks_diff(end, start):
 
 class SX126X:
 
-    def __init__(self, spi_bus, clk, mosi, miso, cs, irq, rst, gpio):
+    def __init__(self, spi: busio.SPI, cs: digitalio.DigitalInOut, 
+                 irq: digitalio.DigitalInOut, rst: digitalio.DigitalInOut , gpio: digitalio.DigitalInOut):
         self._irq = irq
 
-        self.spi = busio.SPI(clk, MOSI=mosi, MISO=miso)
-        while not self.spi.try_lock():
-            pass
-        self.spi.configure(baudrate=2000000, phase=0, polarity=0, bits=8)
-        self.spi.unlock()
-        self.cs = digitalio.DigitalInOut(cs)
-        self.cs.switch_to_output(value=True)
-        self.irq = digitalio.DigitalInOut(irq)
-        self.irq.switch_to_input()
-        self.rst = digitalio.DigitalInOut(rst)
-        self.rst.switch_to_output(value=True)
-        self.gpio = digitalio.DigitalInOut(gpio)
-        self.gpio.switch_to_input()
+        self.spi = spi
+        self.cs = cs
+        self.rst = rst
+        self.irq = irq
+        self.gpio = gpio
 
         self._bwKhz = 0
         self._sf = 0

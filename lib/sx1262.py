@@ -1,7 +1,8 @@
+import busio
+import digitalio
+from _sx126x import *
 from micropython import const
-
-from lib.sx126._sx126x import *
-from lib.sx126.sx126x import SX126X
+from sx126x import SX126X
 
 _SX126X_PA_CONFIG_SX1262 = const(0x00)
 
@@ -18,8 +19,9 @@ class SX1262(SX126X):
     PREAMBLE_DETECT_32 = SX126X_GFSK_PREAMBLE_DETECT_32
     STATUS = ERROR
 
-    def __init__(self, spi_bus, clk, mosi, miso, cs, irq, rst, gpio):
-        super().__init__(spi_bus, clk, mosi, miso, cs, irq, rst, gpio)
+    def __init__(self, spi: busio.SPI, cs: digitalio.DigitalInOut, 
+                 irq: digitalio.DigitalInOut, rst: digitalio.DigitalInOut , gpio: digitalio.DigitalInOut):
+        super().__init__(spi, cs, irq, rst, gpio)
         self._callbackFunction = self._dummyFunction
 
     def begin(self, freq=434.0, bw=125.0, sf=9, cr=7, syncWord=SX126X_SYNC_WORD_PRIVATE,
