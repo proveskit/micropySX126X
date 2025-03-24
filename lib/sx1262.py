@@ -1,5 +1,7 @@
-from _sx126x import *
-from sx126x import SX126X
+from micropython import const
+
+from lib.sx126._sx126x import *
+from lib.sx126.sx126x import SX126X
 
 _SX126X_PA_CONFIG_SX1262 = const(0x00)
 
